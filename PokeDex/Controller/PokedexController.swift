@@ -13,6 +13,8 @@ class PokedexController: UICollectionViewController {
     
     //MARK: - Properties
     
+    var pokemon = [Pokemon]()
+    
     let imageView: UIImageView = {
        let iv = UIImageView()
         iv.image = UIImage(named: "backTest")
@@ -28,6 +30,7 @@ class PokedexController: UICollectionViewController {
         
         configureNavBar()
         configureCollectionView()
+        fetchPokemon()
     }
 
     //MARK: - Helpers
@@ -56,6 +59,17 @@ class PokedexController: UICollectionViewController {
     @objc func handleSearch() {
         print("Search Prokemon")
     }
+    
+    //MARK: - API
+    
+    private func fetchPokemon() {
+        APICaller.shared.fetchPokemon { (pokemon) in
+            DispatchQueue.main.async {
+                self.pokemon = pokemon
+                self.collectionView.reloadData()
+            }
+        }
+    }
 }
 
 //MARK: - UICollectionViewDataSource
@@ -63,11 +77,13 @@ class PokedexController: UICollectionViewController {
 extension PokedexController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 15
+        return pokemon.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! PokedexCell
+        
+        cell.pokemon = pokemon[indexPath.row]
         
         return cell
     }

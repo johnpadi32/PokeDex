@@ -11,6 +11,12 @@ class PokedexCell: UICollectionViewCell {
     
     //MARK: - Properties
     
+    var pokemon: Pokemon? {
+        didSet {
+            configure()
+        }
+    }
+    
     let imageview: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -71,10 +77,17 @@ class PokedexCell: UICollectionViewCell {
         nameLabel.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 5, paddingRight: 5, height: 40)
         
         addSubview(imageview)
-        imageview.anchor(top: topAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 10, paddingBottom: 0, paddingRight: 0, width: 70, height: 70)
+        imageview.anchor(top: topAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 10, paddingBottom: 0, paddingRight: 3, width: 70, height: 70)
         
         addSubview(typeLabel)
         typeLabel.anchor(left: leftAnchor, bottom: bottomAnchor, paddingLeft: 5, paddingBottom: 13, width: 75, height: 25)
-        
+    }
+    
+    //MARK: - Action
+    
+    private func configure() {
+        imageview.image = pokemon?.image
+        nameLabel.text = pokemon?.name
+        typeLabel.text = pokemon?.type
     }
 }
