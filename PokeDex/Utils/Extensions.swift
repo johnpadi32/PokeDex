@@ -7,6 +7,12 @@
 
 import UIKit
 
+extension String {
+    func capitalizeFirstLetter() -> String {
+        return self.prefix(1).uppercased() + self.lowercased().dropFirst()
+    }
+}
+
 extension UIColor {
     
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
@@ -15,6 +21,61 @@ extension UIColor {
     
     static func mainRed() -> UIColor {
         return UIColor.rgb(red: 250, green: 101, blue: 85)
+    }
+    
+    ///Cell backgroundColor
+    /// Red
+    static func viewRed() -> UIColor {
+        return UIColor.rgb(red: 247, green: 120, blue: 107)
+    }
+    
+    static func typeRed() -> UIColor {
+        return UIColor.rgb(red: 249, green: 143, blue: 144)
+    }
+    
+    /// Blue
+    static func viewBlue() -> UIColor {
+        return UIColor.rgb(red: 88, green: 171, blue: 246)
+    }
+    
+    static func typeBlue() -> UIColor {
+        return UIColor.rgb(red: 129, green: 192, blue: 248)
+    }
+    
+    /// Green
+    static func viewGree() -> UIColor {
+        return UIColor.rgb(red: 44, green: 218, blue: 177)
+    }
+    
+    static func typeGree() -> UIColor {
+        return UIColor.rgb(red: 96, green: 227, blue: 196)
+    }
+    
+    // Yellow
+    static func viewYellow() -> UIColor {
+        return UIColor.rgb(red: 255, green: 206, blue: 76)
+    }
+    
+    static func typeYellow() -> UIColor {
+        return UIColor.rgb(red: 255, green: 218, blue: 119)
+    }
+    
+    /// Purple
+    static func viewPurple() -> UIColor {
+        return UIColor.rgb(red: 159, green: 91, blue: 166)
+    }
+    
+    static func typePurple() -> UIColor {
+        return UIColor.rgb(red: 183, green: 132, blue: 203)
+    }
+    
+    /// Brown
+    static func viewBrown() -> UIColor {
+        return UIColor.rgb(red: 202, green: 129, blue: 121)
+    }
+    
+    static func typeBrown() -> UIColor {
+        return UIColor.rgb(red: 215, green: 160, blue: 154)
     }
 }
 
