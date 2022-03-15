@@ -18,6 +18,7 @@ class APICaller {
     //MARK: - Fetch Pokemon
     
     func fetchPokemon(completion: @escaping([Pokemon]) -> ()) {
+        
         var pokemonArray = [Pokemon]()
         guard let url = URL(string: "\(Constants.baseURL)") else { return }
         

@@ -154,7 +154,6 @@ extension PokedexController {
     }
 }
 
-
 //MARK: - UICollectionViewDelegateFlowLayout
 
 extension PokedexController: UICollectionViewDelegateFlowLayout {

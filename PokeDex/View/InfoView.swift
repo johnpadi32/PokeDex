@@ -56,7 +56,7 @@ class InfoView: UIView {
         let button = UIButton(type: .system)
         button.tintColor = .white
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+        button.addTarget(InfoView.self, action: #selector(handleDismiss), for: .touchUpInside)
         return button
     }()
     
