@@ -137,7 +137,7 @@ class PokedexCell: UICollectionViewCell {
         guard let id = pokemon?.id else { return }
         
         imageview.image = pokemon?.image
-        nameLabel.text = pokemon?.name
+        nameLabel.text = pokemon?.name?.capitalized
         typeLabel.text = pokemon?.type?.capitalizeFirstLetter()
         idLabel.text = "#\(id)"
         

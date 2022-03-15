@@ -14,6 +14,9 @@ class PokedexController: UICollectionViewController {
     //MARK: - Properties
     
     var pokemon = [Pokemon]()
+    var filterPokemon = [Pokemon]()
+    var inSearchMode = false
+    var searchBar: UISearchBar!
     
     let infoView: InfoView = {
         let view = InfoView()
@@ -55,12 +58,14 @@ class PokedexController: UICollectionViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .mainRed()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.stack.3d.down.right"), style: .done, target: self, action: #selector(handleSlidingCards))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(handleSlidingCards))
         
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .done, target: self, action: #selector(handleSearch)),
-            UIBarButtonItem(image: UIImage(systemName: "star"), style: .done, target: self, action: nil)
-        ]
+        configureSearchBarButton()
+        
+//        navigationItem.rightBarButtonItems = [
+//            UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .done, target: self, action: #selector(handleSearch)),
+//            UIBarButtonItem(image: UIImage(systemName: "star"), style: .done, target: self, action: nil)
+//        ]
     }
     
     func configureCollectionView() {
@@ -85,10 +90,27 @@ class PokedexController: UICollectionViewController {
         }
     }
     
+    func configureSearchBar() {
+        searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        searchBar.showsCancelButton = true
+        searchBar.becomeFirstResponder()
+        searchBar.tintColor = .mainRed()
+        
+        navigationItem.rightBarButtonItem = nil
+        navigationItem.titleView = searchBar
+    }
+    
+    func configureSearchBarButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .done, target: self, action: #selector(handleSearch))
+
+    }
+    
     //MARK: - Actions
     
     @objc func handleSearch() {
-        print("Search Prokemon")
+        configureSearchBar()
     }
     
     @objc func handleDismiss() {
@@ -119,13 +141,14 @@ class PokedexController: UICollectionViewController {
 extension PokedexController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemon.count
+        return inSearchMode ? filterPokemon.count : pokemon.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! PokedexCell
+        
+        cell.pokemon = inSearchMode ? filterPokemon[indexPath.row] : pokemon[indexPath.row]
         cell.delegate = self
-        cell.pokemon = pokemon[indexPath.row]
         
         return cell
     }
@@ -176,10 +199,36 @@ extension PokedexController: PokedexCellDelegate {
     }
 }
 
+//MARK: - infoViewDelegate
+
 extension PokedexController: infoViewDelegate {
     func dismissInfoView(withPokemon pokemon: Pokemon?) {
         dimissInfoView(pokemon: pokemon)
     }
+}
+
+//MARK: - UISearchBarDelegate
+
+extension PokedexController: UISearchBarDelegate {
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        navigationItem.titleView = nil
+        configureSearchBarButton()
+        inSearchMode = false
+        collectionView.reloadData()
+    }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+                
+        if searchText == "" || searchBar.text == nil {
+            inSearchMode = false
+            collectionView.reloadData()
+            view.endEditing(true)
+        } else {
+            inSearchMode = true
+            filterPokemon = pokemon.filter({ $0.name?.range(of: searchText.lowercased()) != nil })
+            
+            collectionView.reloadData()
+        }
+    }
 }
