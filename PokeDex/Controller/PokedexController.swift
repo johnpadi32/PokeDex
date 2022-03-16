@@ -53,12 +53,12 @@ class PokedexController: UICollectionViewController {
     func configureNavBar() {
         
         collectionView.backgroundView = imageView
-        title = "Pokedex"
+        title = "Explore"
 
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .mainRed()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(handleSlidingCards))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(handleSlidingCards))
         
         configureSearchBarButton()
         
@@ -117,12 +117,12 @@ class PokedexController: UICollectionViewController {
         dimissInfoView(pokemon: nil)
     }
                                                            
-    @objc func handleSlidingCards() {
-        let controller = SlideCardsController()
-        let nav = UINavigationController(rootViewController: controller)
-        nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: true)
-    }
+//    @objc func handleSlidingCards() {
+//        let controller = SlideCardsController()
+//        let nav = UINavigationController(rootViewController: controller)
+//        nav.modalPresentationStyle = .fullScreen
+//        present(nav, animated: true)
+//    }
     
     //MARK: - API
     
