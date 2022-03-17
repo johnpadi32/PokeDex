@@ -167,4 +167,12 @@ extension UIView {
         anchor(top: view.topAnchor, left: view.leftAnchor,
                 bottom: view.bottomAnchor, right: view.rightAnchor)
     }
+    
+    func configureLabel(label: UILabel, title: String, details: String) {
+        let attributedText = NSMutableAttributedString(attributedString: NSAttributedString(string: "\(title)", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15), NSAttributedString.Key.foregroundColor: UIColor.white]))
+        
+        attributedText.append(NSAttributedString(string: "\(details)", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.white]))
+        label.attributedText = attributedText
+    }
 }
+

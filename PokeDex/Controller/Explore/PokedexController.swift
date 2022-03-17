@@ -57,15 +57,9 @@ class PokedexController: UICollectionViewController {
 
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .mainRed()
-        
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(handleSlidingCards))
-        
+
         configureSearchBarButton()
-        
-//        navigationItem.rightBarButtonItems = [
-//            UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .done, target: self, action: #selector(handleSearch)),
-//            UIBarButtonItem(image: UIImage(systemName: "star"), style: .done, target: self, action: nil)
-//        ]
+
     }
     
     func configureCollectionView() {
@@ -116,13 +110,6 @@ class PokedexController: UICollectionViewController {
     @objc func handleDismiss() {
         dimissInfoView(pokemon: nil)
     }
-                                                           
-//    @objc func handleSlidingCards() {
-//        let controller = SlideCardsController()
-//        let nav = UINavigationController(rootViewController: controller)
-//        nav.modalPresentationStyle = .fullScreen
-//        present(nav, animated: true)
-//    }
     
     //MARK: - API
     
@@ -151,6 +138,12 @@ extension PokedexController {
         cell.delegate = self
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = PokemonDetailView()
+        controller.pokemon = inSearchMode ? filterPokemon[indexPath.row] : pokemon[indexPath.row]
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

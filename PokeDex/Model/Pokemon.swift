@@ -18,7 +18,7 @@ class Pokemon {
     var defense: Int?
     var description: String?
     var type: String?
-    var baseExperience: Int?
+    var attack: Int?
     
     init(id: Int, dictionary: [String: AnyObject]) {
         self.id = id
@@ -51,8 +51,8 @@ class Pokemon {
             self.type = type
         }
         
-        if let baseExperience = dictionary["baseExperience"] as? Int {
-            self.baseExperience = baseExperience
+        if let attack = dictionary["attack"] as? Int {
+            self.attack = attack
         }
     }
     

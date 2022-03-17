@@ -22,7 +22,7 @@ class APICaller {
         var pokemonArray = [Pokemon]()
         guard let url = URL(string: "\(Constants.baseURL)") else { return }
         
-        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
             guard let data = data, error == nil else {
                 return
             }
