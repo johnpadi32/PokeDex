@@ -52,14 +52,6 @@ class InfoView: UIView {
         return label
     }()
     
-    private let dismissButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.tintColor = .white
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.addTarget(InfoView.self, action: #selector(handleDismiss), for: .touchUpInside)
-        return button
-    }()
-    
     let backView: UIView = {
        let view = UIView()
         return view
@@ -70,6 +62,18 @@ class InfoView: UIView {
         view.alpha = 0.3
         view.backgroundColor = .white
         return view
+    }()
+    
+    private let moreInfoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("View More Info", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = #colorLiteral(red: 0.8662442565, green: 0.337387979, blue: 0.3372073472, alpha: 1)
+        button.layer.cornerRadius = 5
+        button.setHeight(50)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.addTarget(self, action: #selector(handleViewMoreInfo), for: .touchUpInside)
+        return button
     }()
     
     
@@ -104,9 +108,6 @@ class InfoView: UIView {
         imageView.setDimensions(height: 230, width: 230)
         imageView.anchor(left: leftAnchor, bottom: circleView.bottomAnchor,right: rightAnchor, paddingLeft: 50, paddingBottom: -40, paddingRight: 50)
 
-        addSubview(dismissButton)
-        dismissButton.anchor(top: topAnchor, right: rightAnchor, paddingTop: 15, paddingRight: 15, width: 20, height: 20)
-
         let stack = UIStackView(arrangedSubviews: [idLabel, nameLabel, typeLabel])
         stack.axis = .vertical
         stack.alignment = .center
@@ -115,8 +116,8 @@ class InfoView: UIView {
         addSubview(stack)
         stack.anchor(top: imageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 10, paddingRight: 10)
         
-        //addSubview(moreInfoButton)
-        //moreInfoButton.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingLeft: 10, paddingBottom: 10, paddingRight: 10, width: 0)
+        addSubview(moreInfoButton)
+        moreInfoButton.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingLeft: 10, paddingBottom: 10, paddingRight: 10, width: 0)
 
     }
     
@@ -151,7 +152,9 @@ class InfoView: UIView {
     
     //MARK: - Actions
     
-    @objc func handleDismiss() {
+    @objc func handleViewMoreInfo() {
+        guard let pokemon = self.pokemon else { return }
+
         delegate?.dismissInfoView(withPokemon: pokemon)
     }
     
@@ -168,5 +171,6 @@ class InfoView: UIView {
         configureLabel(label: typeLabel, title: "Type: ", details: "\(type)")
         
         backView.backgroundColor =  pokeBackgroundView
+        
     }
 }

@@ -73,6 +73,12 @@ class PokedexController: UICollectionViewController {
         visualEffect.addGestureRecognizer(gesture)
     }
     
+    func showPokemonInfoController(withPokemon pokemon: Pokemon) {
+        let controller = PokemonDetailView()
+        controller.pokemon = pokemon
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
     func dimissInfoView(pokemon: Pokemon?) {
         UIView.animate(withDuration: 0.5) {
             self.visualEffect.alpha = 0
@@ -81,19 +87,30 @@ class PokedexController: UICollectionViewController {
             self.infoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         } completion: { _ in
             self.infoView.removeFromSuperview()
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            guard let pokemon = pokemon else { return }
+            self.showPokemonInfoController(withPokemon: pokemon)
         }
     }
     
-    func configureSearchBar() {
-        searchBar = UISearchBar()
-        searchBar.delegate = self
-        searchBar.sizeToFit()
-        searchBar.showsCancelButton = true
-        searchBar.becomeFirstResponder()
-        searchBar.tintColor = .mainRed()
+    func configureSearchBar(shouldShow: Bool) {
         
-        navigationItem.rightBarButtonItem = nil
-        navigationItem.titleView = searchBar
+        if shouldShow {
+            searchBar = UISearchBar()
+            searchBar.delegate = self
+            searchBar.sizeToFit()
+            searchBar.showsCancelButton = true
+            searchBar.becomeFirstResponder()
+            searchBar.tintColor = .mainRed()
+            
+            navigationItem.rightBarButtonItem = nil
+            navigationItem.titleView = searchBar
+        } else {
+            navigationItem.titleView = nil
+            configureSearchBarButton()
+            inSearchMode = false
+            collectionView.reloadData()
+        }
     }
     
     func configureSearchBarButton() {
@@ -104,7 +121,7 @@ class PokedexController: UICollectionViewController {
     //MARK: - Actions
     
     @objc func handleSearch() {
-        configureSearchBar()
+        configureSearchBar(shouldShow: true)
     }
     
     @objc func handleDismiss() {
@@ -141,9 +158,21 @@ extension PokedexController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let controller = PokemonDetailView()
-        controller.pokemon = inSearchMode ? filterPokemon[indexPath.row] : pokemon[indexPath.row]
-        navigationController?.pushViewController(controller, animated: true)
+        let poke = inSearchMode ? filterPokemon[indexPath.row] : pokemon[indexPath.row]
+        
+        var pokemonEvoArray = [Pokemon]()
+        
+        if let evoChain = poke.evolutionChain {
+            
+            let evolutionChain = EvolutionChain(evolutionArray: evoChain)
+            let evoIds = evolutionChain.evolutionIds
+            
+            evoIds.forEach { (id) in
+                pokemonEvoArray.append(pokemon[id - 1])
+            }
+            poke.evoArray = pokemonEvoArray
+        }
+        showPokemonInfoController(withPokemon: poke)
     }
 }
 
@@ -168,9 +197,14 @@ extension PokedexController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+//MARK: - PokedexCellDelegate
+
 extension PokedexController: PokedexCellDelegate {
     
     func presentInfoView(withPokemon pokemon: Pokemon) {
+        
+        configureSearchBar(shouldShow: false)
+        navigationItem.rightBarButtonItem?.isEnabled = false
         
         view.addSubview(infoView)
         infoView.delegate = self
@@ -196,6 +230,7 @@ extension PokedexController: PokedexCellDelegate {
 extension PokedexController: infoViewDelegate {
     func dismissInfoView(withPokemon pokemon: Pokemon?) {
         dimissInfoView(pokemon: pokemon)
+
     }
 }
 
@@ -204,10 +239,7 @@ extension PokedexController: infoViewDelegate {
 extension PokedexController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        navigationItem.titleView = nil
-        configureSearchBarButton()
-        inSearchMode = false
-        collectionView.reloadData()
+        configureSearchBar(shouldShow: false)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

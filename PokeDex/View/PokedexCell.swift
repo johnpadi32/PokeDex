@@ -26,7 +26,6 @@ class PokedexCell: UICollectionViewCell {
     let imageview: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .lightGray
         return iv
     }()
     
@@ -60,7 +59,6 @@ class PokedexCell: UICollectionViewCell {
     
     let backView: UIView = {
        let view = UIView()
-        view.backgroundColor = .white
         return view
     }()
     

@@ -97,7 +97,6 @@ class PokemonDetailView: UIViewController {
         iv.contentMode = .scaleAspectFit
         iv.setWidth(100)
         iv.setHeight(120)
-        iv.image = UIImage(named: "pikachu")
         return iv
     }()
     
@@ -112,7 +111,6 @@ class PokemonDetailView: UIViewController {
         iv.contentMode = .scaleAspectFit
         iv.setWidth(100)
         iv.setHeight(120)
-        iv.image = UIImage(named: "pikachu")
         return iv
     }()
     
@@ -254,8 +252,14 @@ class PokemonDetailView: UIViewController {
         configureLabel(label: weightLabel, title: "Weight: ", details: "\(weight)")
         
         backDescriptionView.backgroundColor =  pokeBackgroundView
-
-
-                
+        
+        if let evoArray = pokemon.evoArray {
+            if evoArray.count > 1 {
+                firstEvoImage.image = evoArray[0].image
+                secondEvoImage.image = evoArray[1].image
+            } else {
+                firstEvoImage.image = evoArray[0].image
+            }
+        }
     }
 }
