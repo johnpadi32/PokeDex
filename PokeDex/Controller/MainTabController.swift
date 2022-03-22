@@ -28,7 +28,7 @@ class MainTabController: UITabBarController {
         let vc1 = templateNavController(Image: "doc.text.magnifyingglass", title: "Explore", rootViewController: PokedexController(collectionViewLayout: layout))
         let vc2 = templateNavController(Image: "circle.circle.fill", title: "Catch Them", rootViewController: SliderController())
         let vc3 = templateNavController(Image: "square.and.arrow.down", title: "Saved", rootViewController: SavedController())
-        
+
         viewControllers = [vc1, vc2, vc3]
         tabBar.tintColor = .mainRed()
     }

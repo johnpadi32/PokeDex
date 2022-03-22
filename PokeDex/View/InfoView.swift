@@ -68,7 +68,7 @@ class InfoView: UIView {
         let button = UIButton(type: .system)
         button.setTitle("View More Info", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.8662442565, green: 0.337387979, blue: 0.3372073472, alpha: 1)
+        button.backgroundColor = .black.withAlphaComponent(0.2)
         button.layer.cornerRadius = 5
         button.setHeight(50)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
