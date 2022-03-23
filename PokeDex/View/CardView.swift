@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum SwipeDirection: Int {
+    case left = -1
+    case right = 1
+}
+
 class CardView: UIView {
     
     //MARK: - Properties
@@ -72,6 +77,8 @@ class CardView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        configureGestureRecognizer()
+        
         backgroundColor = .systemBlue
         layer.cornerRadius = 35
         clipsToBounds = true
@@ -99,5 +106,64 @@ class CardView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    //MARK: - Helpers
+    
+    func configureGestureRecognizer() {
+        
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGestue))
+        addGestureRecognizer(pan)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleChangePhoto))
+        addGestureRecognizer(tap)
+    }
+    
+    func resetCardPosition(sender: UIPanGestureRecognizer) {
+        let direction: SwipeDirection = sender.translation(in: nil).x > 100 ? .right : .left
+        let shouldDismissCard = abs(sender.translation(in: nil).x) > 100
+        
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut) {
+            if shouldDismissCard {
+                let xTranslation = CGFloat(direction.rawValue) * 1000
+                let offScreenTransfeorm = self.transform.translatedBy(x: xTranslation, y: 0)
+                self.transform = offScreenTransfeorm
+            } else {
+                self.transform = .identity
+            }
+        } completion: { _ in
+            if shouldDismissCard {
+                self.removeFromSuperview()
+            }
+        }
+    }
+    
+    func panCard(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: nil)
+        let degress: CGFloat = translation.x / 20
+        let angle = degress * .pi / 180
+        let rotationalTransform = CGAffineTransform(rotationAngle: angle)
+        self.transform = rotationalTransform.translatedBy(x: translation.x, y: translation.y)
+    }
+    
+    //MARK: - Actions
+    
+    @objc func handlePanGestue(sender: UIPanGestureRecognizer) {
+        
+        switch sender.state {
+        case .began:
+            superview?.subviews.forEach({ $0.layer.removeAllAnimations()})
+        case .changed:
+            panCard(sender: sender)
+        case .ended:
+            resetCardPosition(sender: sender)
+        @unknown default:
+            break
+        }
+
+    }
+    
+    @objc func handleChangePhoto(sender: UITapGestureRecognizer) {
+        
     }
 }
