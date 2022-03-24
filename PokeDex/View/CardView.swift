@@ -16,6 +16,18 @@ class CardView: UIView {
     
     //MARK: - Properties
     
+//    var pokemon: Pokemon? {
+//        didSet {
+//            configure()
+//        }
+//    }
+    
+    private var viewModel: CardsViewModel? {
+        didSet {
+            configure()
+        }
+    }
+    
     let backView: UIView = {
        let view = UIView()
         view.backgroundColor = .systemGreen
@@ -74,8 +86,15 @@ class CardView: UIView {
     
     //MARK: - Lifecycle
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(viewModel: CardsViewModel) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+    
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+        
+        configure()
+        
         
         configureGestureRecognizer()
         
@@ -166,4 +185,15 @@ class CardView: UIView {
     @objc func handleChangePhoto(sender: UITapGestureRecognizer) {
         
     }
+    
+    func configure() {
+        guard let viewModel = viewModel else {
+            return
+        }
+
+        nameLabel.text = viewModel.name
+    }
+
+    
+
 }

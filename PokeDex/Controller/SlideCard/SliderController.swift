@@ -11,7 +11,12 @@ class SliderController: UIViewController {
     
     //MARK: - Properties
     
+    var pokemon = [Pokemon]()
     private let bottomStack = BottomControllerStackView()
+    
+    private var viewModels = [CardsViewModel]() {
+        didSet { configureCards() }
+    }
     
     private let deckView: UIView = {
        let view = UIView()
@@ -46,7 +51,8 @@ class SliderController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
-        configureCards()
+//        configureCards()
+        fetchPokemon()
     }
     
     @objc func handleDismiss() {
@@ -56,14 +62,21 @@ class SliderController: UIViewController {
     //MARK: - Helpers
     
     func configureCards() {
-        let cardView1 = CardView()
-        let cardView2 = CardView()
+                
+        viewModels.forEach { viewModel in
+            let cardView = CardView(viewModel: viewModel)
+            deckView.addSubview(cardView)
+            cardView.fillSuperview()
+        }
         
-        deckView.addSubview(cardView1)
-        deckView.addSubview(cardView2)
-        
-        cardView1.fillSuperview()
-        cardView2.fillSuperview()
+//        let cardView1 = CardView()
+//        let cardView2 = CardView()
+//
+//        deckView.addSubview(cardView1)
+//        deckView.addSubview(cardView2)
+//
+//        cardView1.fillSuperview()
+//        cardView2.fillSuperview()
     }
     
     func configureUI() {
@@ -91,5 +104,19 @@ class SliderController: UIViewController {
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = .init(top: 20, left: 20, bottom: 0, right: 20)
         stack.bringSubviewToFront(deckView)
+    }
+    
+    //MARK: - Actions
+    
+    //MARK: - API
+    
+    private func fetchPokemon() {
+        APICaller.shared.fetchPokemon { (pokemon) in
+            DispatchQueue.main.async {
+                self.viewModels = pokemon.map({ CardsViewModel(pokemon: $0)})
+                self.viewDidLoad()
+            }
+            
+        }
     }
 }
